@@ -13,24 +13,15 @@ import java.io.InputStream;
 
 @RestController
 public class RDFController {
-
-//    @Value("${static.path}")
-//    private String staticPath;
-
     @PostMapping("/generateLinkedData")
     public ResponseEntity<?> generateLinkedData(@RequestParam("yamlFile") MultipartFile yamlFile,
                                                 @RequestParam("csvFile") MultipartFile csvFile) throws IOException {
         byte[] linkedData = new byte[0];
 
-        //String staticPath = "C:\\Users\\Zihan\\Desktop\\TFG\\tab2kgwiz-api\\src\\main\\static";
-        //String staticPath = "/home/zihan/yarrrml";
         String staticPath = "/root/resources";
 
-        System.out.println(staticPath);
-        //File csvData = new File("C:\\Users\\Zihan\\Desktop\\TFG\\tab2kgwiz-api\\src\\main\\static\\mappings.csv");
         File csvData = new File(staticPath, "mappings.csv");
 
-        //File yamlData = new File("C:\\Users\\Zihan\\Desktop\\TFG\\tab2kgwiz-api\\src\\main\\static\\mappings.yarrrml.yml");
         File yamlData = new File(staticPath, "mappings.yarrrml.yml");
         File outputData = new File(staticPath, "output.txt");
         File rulesFile = new File(staticPath, "rules.rml.ttl");
@@ -38,16 +29,8 @@ public class RDFController {
         yamlFile.transferTo(yamlData);
         csvFile.transferTo(csvData);
 
-//        ProcessBuilder builder1 = new ProcessBuilder("docker", "run", "--rm", "-v",
-//                "C:\\Users\\Zihan\\Desktop\\TFG\\tab2kgwiz-api\\src\\main\\static:/data",
-//                "rmlio/yarrrml-parser:latest", "-i", "/data/mappings.yarrrml.yml");
-
         ProcessBuilder builder1 = new ProcessBuilder("docker", "run", "--rm", "-v", staticPath + ":/data",
                 "rmlio/yarrrml-parser:latest", "-i", "/data/mappings.yarrrml.yml");
-
-        // Redirect standard output (STDOUT) to a file
-//        builder1.redirectOutput(new File(
-//                "C:\\Users\\Zihan\\Desktop\\TFG\\tab2kgwiz-api\\src\\main\\static\\rules.rml.ttl"));
 
         builder1.redirectOutput(rulesFile);
 
@@ -57,10 +40,6 @@ public class RDFController {
             int exitCode = process.exitValue();
 
             if (exitCode == 0) {
-//                ProcessBuilder builder2 = new ProcessBuilder("docker", "run", "--rm", "-v",
-//                        "C:\\\\Users\\\\Zihan\\\\Desktop\\\\TFG\\\\tab2kgwiz-api\\\\src\\\\main\\\\static:/data", "rmlio/rmlmapper-java"
-//                        , "-m", "rules.rml.ttl");
-
                 ProcessBuilder builder2 = new ProcessBuilder("docker", "run", "--rm", "-v",
                         staticPath + ":/data", "rmlio/rmlmapper-java", "-m", "rules.rml.ttl");
 
