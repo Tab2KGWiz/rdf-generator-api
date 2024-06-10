@@ -34,7 +34,7 @@ public class RDFController {
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
 
         if (response.getStatusCode() == HttpStatus.OK) {
-            String url2 = "http://localhost:4000/execute";
+            String url2 = "https://rmlmapper-webapi-js-677i7.ondigitalocean.app/execute";
 
             HttpHeaders headers2 = new HttpHeaders();
             headers2.setContentType(MediaType.APPLICATION_JSON);
