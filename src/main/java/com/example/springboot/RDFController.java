@@ -19,7 +19,8 @@ public class RDFController {
     public ResponseEntity<?> generateLinkedData(@RequestParam("yamlFile") MultipartFile yamlFile,
                                                 @RequestParam("csvFile") MultipartFile csvFile) throws IOException {
         //String url = "https://yarrrml-parser-rest-api-j7iai.ondigitalocean.app/yarrrml";
-        String url = "http://localhost:3000/yarrrml";
+        //String url = "http://localhost:3000/yarrrml";
+        String url = "http://yarrrml:3000/yarrrml";
 
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         body.add("yamlFile", yamlFile.getResource());
@@ -34,7 +35,8 @@ public class RDFController {
 
         if (response.getStatusCode() == HttpStatus.OK) {
             //String url2 = "https://rmlmapper-webapi-js-677i7.ondigitalocean.app/execute";
-            String url2 = "http://localhost:4000/execute";
+            //String url2 = "http://localhost:4000/execute";
+            String url2 = "http://rmlmapper:4000/execute";
 
             HttpHeaders headers2 = new HttpHeaders();
             headers2.setContentType(MediaType.APPLICATION_JSON);
