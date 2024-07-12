@@ -1,0 +1,19 @@
+services:
+  yarrrml:
+    image: "zihancr/yarrrml"
+    restart: always
+
+  rmlmapper:
+    image: "zihancr/rmlmapper"
+    depends_on:
+      - yarrrml
+    restart: always
+
+  rdfgenerator:
+    image: "zihancr/rdfgenerator"
+    depends_on:
+      - yarrrml
+      - rmlmapper
+    restart: always
+    ports:
+      - "8081:8081"
