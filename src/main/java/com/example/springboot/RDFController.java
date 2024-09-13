@@ -1,5 +1,6 @@
 package com.example.springboot;
 
+import com.fasterxml.jackson.core.StreamReadConstraints;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.*;
@@ -65,6 +66,7 @@ public class RDFController {
 
             try {
                 ObjectMapper mapper = new ObjectMapper();
+                mapper.getFactory().setStreamReadConstraints(StreamReadConstraints.builder().maxStringLength(100_000_000).build());
                 JsonNode jsonNode = mapper.readTree(jsonString);
                 jsonString = jsonNode.get("output").asText();
             } catch (Exception e) {
