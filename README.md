@@ -23,6 +23,10 @@ Once the application runs you should see something like this
 2024-07-02T12:05:44.967+02:00  INFO 91552 --- [spring-boot] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
 ```
 
+## To consume the API
+
+    $ curl -X POST -F "yamlFile=@mapping.yml" -F "csvFile=@sample.csv" http://localhost:8081/generateLinkedData > sample.nt
+
 ## Docker
 
 ### Install
