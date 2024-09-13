@@ -20,5 +20,5 @@ FROM openjdk:17-jdk-alpine
 WORKDIR /app
 # copy over the built artifact from the maven image
 COPY --from=stage1 /opt/demo/target/*.jar /app
-ENTRYPOINT ["java","-jar","latest-SNAPSHOT.jar"]
+ENTRYPOINT ["java","-jar","spring-boot-0.0.1-SNAPSHOT.jar"]
 EXPOSE 8081
