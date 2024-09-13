@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.*;
 
 @RestController
-@CrossOrigin(methods = {RequestMethod.POST})
+@CrossOrigin(methods = {RequestMethod.POST, RequestMethod.GET})
 public class RDFController {
     @PostMapping("/generateLinkedData")
     public ResponseEntity<?> generateLinkedData(@RequestParam("yamlFile") MultipartFile yamlFile,
@@ -78,5 +78,10 @@ public class RDFController {
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error generating YARRRML file.");
         }
+    }
+
+    @GetMapping("/health")
+    public ResponseEntity<String> health() {
+        return ResponseEntity.ok("OK");
     }
 }
