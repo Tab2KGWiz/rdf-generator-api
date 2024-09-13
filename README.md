@@ -4,12 +4,13 @@ This is a Spring Boot application that generates RDF data from a given CSV and Y
 
 ## How to Run
 
-You run it using the ```java -jar``` command.
+You run it using the `java -jar` command.
 
-* Clone this repository
-* Make sure you are using JDK 17 and Maven 3.x
-* You can build the project and run the tests by running ```mvn clean package```
-* Once successfully built, you can run the service by one of these two methods:
+- Clone this repository
+- Make sure you are using JDK 17 and Maven 3.x
+- You can build the project and run the tests by running `mvn clean package`
+- Once successfully built, you can run the service by one of these two methods:
+
 ```
         java -jar target/spring-boot-0.0.1-SNAPSHOT.jar
 or
@@ -36,3 +37,7 @@ Once the application runs you should see something like this
 ### Run
 
     $ docker run -p 8081:8081 -it rdf-generator-api
+
+### Docker hub
+
+    $ docker pull zihancr/rdfgenerator
