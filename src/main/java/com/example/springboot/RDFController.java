@@ -14,16 +14,19 @@ import java.io.IOException;
 import java.util.*;
 
 @RestController
-@CrossOrigin(methods = {RequestMethod.POST, RequestMethod.GET})
+@CrossOrigin(methods = { RequestMethod.POST, RequestMethod.GET })
 public class RDFController {
 
-    private final String yarrrmlUrl = System.getenv("YARRRML_URL");
-    private final String rmlmapperUrl = System.getenv("RMLMAPPER_URL");
+    private final String yarrrmlService = System.getenv("YARRRML_SERVICE") != null ? System.getenv("YARRRML_SERVICE")
+            : "yarrrml";
+    private final String rmlmapperService = System.getenv("RMLMAPPER_SERVICE") != null
+            ? System.getenv("RMLMAPPER_SERVICE")
+            : "rmlmapper";
 
     @PostMapping("/generateLinkedData")
     public ResponseEntity<?> generateLinkedData(@RequestParam("yamlFile") MultipartFile yamlFile,
-                                                @RequestParam("csvFile") MultipartFile csvFile) throws IOException {
-        String url = yarrrmlUrl != null ? yarrrmlUrl : "http://yarrrml:3000/yarrrml";
+            @RequestParam("csvFile") MultipartFile csvFile) throws IOException {
+        String yarrrmlUrl = String.format("http://%s:3000/yarrrml", yarrrmlService);
 
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         body.add("yamlFile", yamlFile.getResource());
@@ -34,10 +37,11 @@ public class RDFController {
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(yarrrmlUrl, HttpMethod.POST, requestEntity,
+                String.class);
 
         if (response.getStatusCode() == HttpStatus.OK) {
-            String url2 = rmlmapperUrl != null ? rmlmapperUrl : "http://rmlmapper:4000/execute";
+            String rmlUrl = String.format("http://%s:4000/execute", rmlmapperService);
 
             HttpHeaders headers2 = new HttpHeaders();
             headers2.setContentType(MediaType.APPLICATION_JSON);
@@ -56,17 +60,20 @@ public class RDFController {
 
             String output = joiner.toString();
 
-            String requestBody = String.format("{\"rml\":%s,\"sources\":{\"mappings.csv\":\"%s\"}}", rmlContent, output);
+            String requestBody = String.format("{\"rml\":%s,\"sources\":{\"mappings.csv\":\"%s\"}}", rmlContent,
+                    output);
 
             HttpEntity<String> requestEntity2 = new HttpEntity<>(requestBody, headers2);
 
-            ResponseEntity<String> responseEntity2 = restTemplate.exchange(url2, HttpMethod.POST, requestEntity2, String.class);
+            ResponseEntity<String> responseEntity2 = restTemplate.exchange(rmlUrl, HttpMethod.POST, requestEntity2,
+                    String.class);
 
             String jsonString = responseEntity2.getBody();
 
             try {
                 ObjectMapper mapper = new ObjectMapper();
-                mapper.getFactory().setStreamReadConstraints(StreamReadConstraints.builder().maxStringLength(100_000_000).build());
+                mapper.getFactory()
+                        .setStreamReadConstraints(StreamReadConstraints.builder().maxStringLength(100_000_000).build());
                 JsonNode jsonNode = mapper.readTree(jsonString);
                 jsonString = jsonNode.get("output").asText();
             } catch (Exception e) {
